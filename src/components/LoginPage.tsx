@@ -14,7 +14,6 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
 
-    // Lógica de login com o Supabase para usuários registrados
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
@@ -22,11 +21,17 @@ const LoginPage: React.FC = () => {
 
     if (error) {
       setError(error.message);
+      setIsLoading(false);
     } else {
-      // Navega para a rota inicial que decide se mostra a tela de boas-vindas ou não
-      navigate('/initial-route', { replace: true });
+      const unlockDate = new Date('2025-10-16T06:00:00');
+      const now = new Date();
+
+      if (now < unlockDate) {
+        navigate('/aguarde-liberacao', { replace: true });
+      } else {
+        navigate('/initial-route', { replace: true });
+      }
     }
-    setIsLoading(false);
   };
 
   return (
