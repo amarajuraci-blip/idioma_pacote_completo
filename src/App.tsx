@@ -13,8 +13,9 @@ import Module4Page from './components/Module4Page';
 import Module5Page from './components/Module5Page';
 import LessonCompletionPage from './components/LessonCompletionPage';
 import ModuleCompletionPage from './components/ModuleCompletionPage';
-import WelcomePage from './components/WelcomePage'; // <-- NOVA IMPORTAÇÃO
-import InitialRouter from './components/InitialRouter'; // <-- NOVA IMPORTAÇÃO
+import WelcomePage from './components/WelcomePage';
+import InitialRouter from './components/InitialRouter';
+import ReleaseCountdownPage from './components/ReleaseCountdownPage';
 
 function App() {
   return (
@@ -22,22 +23,24 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        
-        {/* --- NOVAS ROTAS PARA O FLUXO INICIAL --- */}
-        <Route 
-          path="/initial-route" 
-          element={<ProtectedRoute><InitialRouter /></ProtectedRoute>} 
+
+        <Route
+          path="/aguarde-liberacao"
+          element={<ProtectedRoute><ReleaseCountdownPage /></ProtectedRoute>}
         />
-        <Route 
-          path="/bem-vindo" 
-          element={<ProtectedRoute><WelcomePage /></ProtectedRoute>} 
+
+        <Route
+          path="/initial-route"
+          element={<ProtectedRoute><InitialRouter /></ProtectedRoute>}
         />
-        
-        <Route 
-          path="/selecao-idioma" 
-          element={<ProtectedRoute><LanguageSelectionPage /></ProtectedRoute>} 
+        <Route
+          path="/bem-vindo"
+          element={<ProtectedRoute><WelcomePage /></ProtectedRoute>}
         />
-        
+        <Route
+          path="/selecao-idioma"
+          element={<ProtectedRoute><LanguageSelectionPage /></ProtectedRoute>}
+        />
         <Route path="/:lang/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
         <Route path="/:lang/modulo/1" element={<ProtectedRoute><Module1Page /></ProtectedRoute>} />
         <Route path="/:lang/modulo/1/aula/:lessonId" element={<ProtectedRoute><LessonPage /></ProtectedRoute>} />
@@ -46,9 +49,9 @@ function App() {
         <Route path="/:lang/modulo/4" element={<ProtectedRoute><Module4Page /></ProtectedRoute>} />
         <Route path="/:lang/modulo/5" element={<ProtectedRoute><Module5Page /></ProtectedRoute>} />
 
-        <Route 
-          path="/:lang/aula-concluida" 
-          element={<ProtectedRoute><LessonCompletionPage /></ProtectedRoute>} 
+        <Route
+          path="/:lang/aula-concluida"
+          element={<ProtectedRoute><LessonCompletionPage /></ProtectedRoute>}
         />
 
         <Route path="/:lang/modulo/2/concluido" element={<ProtectedRoute><ModuleCompletionPage moduleNumber={2} /></ProtectedRoute>} />
