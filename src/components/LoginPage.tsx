@@ -23,15 +23,8 @@ const LoginPage: React.FC = () => {
       setError(error.message);
       setIsLoading(false);
     } else {
-      // ALTERAÇÃO FEITA AQUI: de 06:00:00 para 09:00:00
-      const unlockDate = new Date('2025-10-16T09:00:00');
-      const now = new Date();
-
-      if (now < unlockDate) {
-        navigate('/aguarde-liberacao', { replace: true });
-      } else {
-        navigate('/initial-route', { replace: true });
-      }
+      // Redireciona SEMPRE para a página de espera por enquanto.
+      navigate('/aguarde-liberacao', { replace: true });
     }
   };
 
