@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useReviewCards } from '../hooks/useReviewCards';
 import { getProgress, markModule5IntroAsPlayed, completeFirstReview } from '../utils/progress';
 import { playAudioOnce } from '../utils/audioPlayer';
-import { playFeedbackAudio } from '../utils/feedbackPlayer'; // <-- NOVA IMPORTAÇÃO
+import { playFeedbackAudio } from '../utils/feedbackPlayer';
 
 const Module5Page: React.FC = () => {
   const navigate = useNavigate();
@@ -34,9 +34,9 @@ const Module5Page: React.FC = () => {
   const currentCard = reviewCards[currentCardIndex];
 
   const playCardAudio = () => {
-    if (currentCard?.audioUrl) {
-      const audio = new Audio(currentCard.audioUrl);
-      audio.play();
+    if (currentCard?.audioUrls && lang && currentCard.audioUrls[lang]) {
+      const audio = new Audio(currentCard.audioUrls[lang]);
+      audio.play().catch(e => console.error("Erro ao tocar áudio:", e));
     }
   };
 
@@ -50,9 +50,8 @@ const Module5Page: React.FC = () => {
 
     const isCorrect = feedback === 'yes';
 
-    // --- TOCA O ÁUDIO DE FEEDBACK ---
     playFeedbackAudio(isCorrect);
-    
+
     setIsProcessing(true);
     setImageFlashClass(isCorrect ? 'flash-image-green' : 'flash-image-red');
 
@@ -81,7 +80,7 @@ const Module5Page: React.FC = () => {
       <div className="h-screen bg-black text-white flex flex-col items-center justify-center p-4">
           <h2 className="text-2xl font-bold text-center mb-4">Nenhum card para revisar!</h2>
           <p className="text-center text-gray-400 mb-6">Complete algumas aulas no Módulo 1 para liberar as revisões.</p>
-          <button 
+          <button
               onClick={() => navigate(`/${lang}/home`)}
               className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
           >
@@ -90,7 +89,7 @@ const Module5Page: React.FC = () => {
       </div>
     )
   }
-  
+
   if (!currentCard) {
     return <div className="min-h-screen bg-black text-white flex items-center justify-center">Carregando revisão...</div>;
   }
@@ -123,14 +122,14 @@ const Module5Page: React.FC = () => {
           <div className="flex items-center p-2 h-12">
             <img src={`https://flagcdn.com/w40/${lang === 'en' ? 'us' : lang}.png`} alt="Bandeira do Idioma" className="w-8 h-auto mr-3" />
             {isRevealed && (
-              <span className="font-bold text-xl">{currentCard.translation}</span>
+              <span className="font-bold text-xl">{currentCard.translations?.[lang || '']}</span>
             )}
           </div>
         </div>
 
         <div className={`bg-white rounded-lg p-2 flex justify-center items-center h-64 ${imageFlashClass}`}>
           {isRevealed ? (
-            <img src={currentCard.imageUrl} alt={currentCard.translation} className="max-w-full max-h-full object-contain" />
+            <img src={currentCard.imageUrl} alt={currentCard.translations?.[lang || '']} className="max-w-full max-h-full object-contain" />
           ) : (
             <button
               onClick={playCardAudio}
