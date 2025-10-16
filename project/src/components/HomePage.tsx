@@ -83,9 +83,26 @@ const HomePage: React.FC = () => {
 
   const { main: mainModules, advanced: advancedModules, listeningPractice, readingAndWriting } = allLanguageData[lang || 'en'].homePageModules;
   
-  // AQUI ESTÁ A CORREÇÃO!
-  // Voltamos a verificar o progresso para decidir se mostramos o conteúdo avançado.
   const showAdvancedContent = progress.completedReviews[5];
+
+  // --- LÓGICA DAS IMAGENS DE CAPA ---
+  const getCoverImages = () => {
+    if (lang === 'en') {
+      return {
+        pc: '/images/visual/capa_en_pc.webp',
+        cell: '/images/visual/capa_en_cell.webp',
+      };
+    }
+    // Assume uma extensão padrão, como .webp ou .jpg. Ajuste se for diferente.
+    const extension = '.webp'; 
+    return {
+      pc: `/images/capapc/${lang}${extension}`,
+      cell: `/images/capacell/${lang}cell${extension}`,
+    };
+  };
+
+  const coverImages = getCoverImages();
+  // --- FIM DA LÓGICA ---
 
   return (
     <div className="min-h-screen bg-black pb-20">
@@ -98,28 +115,24 @@ const HomePage: React.FC = () => {
             <span className="hidden sm:inline">Sair</span>
             </button>
         </div>
+        
+        {/* --- SEÇÃO DA IMAGEM ATUALIZADA --- */}
         <section className="relative">
-            {lang === 'en' ? (
-                <picture>
+            <picture>
                 <source
                     media="(max-width: 768px)"
-                    srcSet="/images/visual/capa_en_cell.webp"
+                    srcSet={coverImages.cell}
                 />
                 <img
-                    src="/images/visual/capa_en_pc.webp"
+                    src={coverImages.pc}
                     alt="Banner Principal"
                     className="w-full h-[40vh] md:h-[60vh] object-cover"
                 />
-                </picture>
-            ) : (
-                <img
-                src="https://i.imgur.com/ru9WoNh.jpg"
-                alt="Banner Principal"
-                className="w-full h-[40vh] md:h-[60vh] object-cover"
-                />
-            )}
+            </picture>
             <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         </section>
+        {/* --- FIM DA SEÇÃO ATUALIZADA --- */}
+
         <div className="container mx-auto px-4 py-16 max-w-7xl">
             <section className="mb-12 md:mb-20">
                 <SectionTitle>
