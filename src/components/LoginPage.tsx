@@ -23,7 +23,8 @@ const LoginPage: React.FC = () => {
       setError(error.message);
       setIsLoading(false);
     } else {
-      const unlockDate = new Date('2025-10-16T06:00:00');
+      // ALTERAÇÃO FEITA AQUI: de 06:00:00 para 09:00:00
+      const unlockDate = new Date('2025-10-16T09:00:00');
       const now = new Date();
 
       if (now < unlockDate) {
