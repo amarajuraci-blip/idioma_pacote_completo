@@ -11,6 +11,7 @@ interface Card {
   translation: string;
   imageUrl: string;
   audioUrl: string;
+  audioUrls: { [key: string]: string };
 }
 
 interface Question {
@@ -31,7 +32,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 const Module3Page: React.FC = () => {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  
+
   const reviewCards = useReviewCards();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -62,16 +63,16 @@ const Module3Page: React.FC = () => {
       generateQuestion(reviewCards, 0);
     }
   }, [reviewCards]);
-  
+
   useEffect(() => {
-    if (currentQuestion && currentQuestionIndex > 0 && !showResult) {
+    if (currentQuestion && !isIntroAudioPlaying && !showResult) {
       playAudio(currentQuestion.audioUrl);
     }
-  }, [currentQuestion, currentQuestionIndex, showResult]);
+  }, [currentQuestion, isIntroAudioPlaying, showResult]);
 
 
   const generateQuestion = (cards: Card[], index: number) => {
-    if (cards.length === 0) return;
+    if (cards.length === 0 || !lang) return;
     if (index >= cards.length) {
       navigate(`/${lang}/modulo/3/concluido`);
       return;
@@ -79,9 +80,9 @@ const Module3Page: React.FC = () => {
     const correctCard = cards[index];
     const wrongAnswers = shuffleArray(cards.filter(card => card.id !== correctCard.id)).slice(0, 3);
     const options = shuffleArray([correctCard, ...wrongAnswers]);
-    
+
     setCurrentQuestion({
-      audioUrl: correctCard.audioUrl,
+      audioUrl: correctCard.audioUrls[lang || ''],
       options: options.map(card => ({ id: card.id, imageUrl: card.imageUrl })),
       correctAnswer: correctCard,
     });
@@ -92,14 +93,14 @@ const Module3Page: React.FC = () => {
 
     setIsProcessing(true);
     const isCorrect = selectedId === currentQuestion.correctAnswer.id;
-    
+
     // --- TOCA O ÁUDIO DE FEEDBACK ---
     playFeedbackAudio(isCorrect);
 
     if (isCorrect && lang) {
       completeFirstReview(lang, 3);
     }
-    
+
     setFlashClass(isCorrect ? 'flash-image-green' : 'flash-image-red');
     setShowResult(true);
 
@@ -112,13 +113,13 @@ const Module3Page: React.FC = () => {
       setIsProcessing(false);
     }, 3000);
   };
-  
+
   if (reviewCards.length === 0) {
     return (
       <div className="h-screen bg-black text-white flex flex-col items-center justify-center p-4">
         <h2 className="text-2xl font-bold text-center mb-4">Nenhum card para revisar!</h2>
         <p className="text-center text-gray-400 mb-6">Complete o Módulo 2 para liberar as revisões.</p>
-        <button 
+        <button
           onClick={() => navigate(`/${lang}/home`)}
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
         >
@@ -160,7 +161,7 @@ const Module3Page: React.FC = () => {
         </div>
         <div className="grid grid-cols-2 gap-3">
           {currentQuestion.options.map((option) => (
-            <button 
+            <button
               key={option.id}
               onClick={() => handleAnswerClick(option.id)}
               disabled={isProcessing || isIntroAudioPlaying}
