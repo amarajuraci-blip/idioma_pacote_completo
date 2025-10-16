@@ -4,7 +4,8 @@ import { Gift } from 'lucide-react';
 
 const ReleaseCountdownPage: React.FC = () => {
   const navigate = useNavigate();
-  const unlockDate = new Date('2025-10-16T06:00:00');
+  // ALTERAÇÃO FEITA AQUI: de 06:00:00 para 09:00:00
+  const unlockDate = new Date('2025-10-16T09:00:00');
 
   const calculateTimeLeft = () => {
     const difference = +unlockDate - +new Date();
@@ -69,7 +70,8 @@ const ReleaseCountdownPage: React.FC = () => {
 
         <div className="bg-gray-800 p-4 rounded-lg">
           <p className="text-gray-400">Acesso será liberado em:</p>
-          <p className="text-white font-semibold text-lg">16 de Outubro de 2025, às 06:00</p>
+          {/* ALTERAÇÃO FEITA AQUI: de 06:00 para 09:00 */}
+          <p className="text-white font-semibold text-lg">16 de Outubro de 2025, às 09:00</p>
         </div>
       </div>
     </div>
